@@ -27,7 +27,7 @@ func handleCommand(cli *mautrix.Client, data *store, ev *event.Event) (replies [
 	str = strings.ToLower(str)
 
 	args := strings.Split(str, " ")
-	if len(args) < 0 {
+	if len(args) <= 0 {
 		return
 	}
 
@@ -211,7 +211,7 @@ func cmdListEvents(u *user, period string, year int, week int) (cmdReply, error)
 		}
 
 		header := day.day.Format("Monday 2 January")
-		lines = append(lines, fmt.Sprintf("%s", header))
+		lines = append(lines, header)
 		linesF = append(linesF, fmt.Sprintf("<b>%s</b>", header))
 
 		for _, ev := range day.events {

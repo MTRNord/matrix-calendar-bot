@@ -64,7 +64,7 @@ func setupReminderTimers(m matrixBot, data *store) {
 		send := func(ev *calendarEvent) {
 			msg := ""
 
-			timeUntil := ev.from.Sub(time.Now())
+			timeUntil := time.Until(ev.from)
 
 			if timeUntil.Minutes() > 0 {
 				msg = fmt.Sprintf("Reminder: %q starts in %d minutes", ev.text, int(timeUntil.Minutes()))

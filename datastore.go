@@ -56,7 +56,7 @@ func (s *store) populateFromDB() error {
 
 func (s *store) user(id id.UserID) (*user, error) {
 	s.usersMutex.RLock()
-	d, _ := s.users[id]
+	d := s.users[id]
 	s.usersMutex.RUnlock()
 
 	if d != nil {

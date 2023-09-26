@@ -93,10 +93,10 @@ func (d *sqlDB) createTables() error {
 
 func (d *sqlDB) fetchAllUsers() ([]*user, error) {
 	rows, err := d.stmtFetchAllUsers.Query()
-	defer rows.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	users := []*user{}
 	for rows.Next() {
@@ -116,20 +116,20 @@ func (d *sqlDB) fetchAllUsers() ([]*user, error) {
 
 func (d *sqlDB) fetchAllCalendars() ([]*userCalendar, error) {
 	rows, err := d.stmtFetchAllCalendars.Query()
-	defer rows.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	return rowsToCalendars(rows)
 }
 
 func (d *sqlDB) fetchCalendars(userID id.UserID) ([]*userCalendar, error) {
 	rows, err := d.stmtFetchCalendars.Query(userID)
-	defer rows.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer rows.Close()
 
 	return rowsToCalendars(rows)
 }

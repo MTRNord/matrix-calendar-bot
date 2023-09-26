@@ -135,12 +135,20 @@ func newICalCalendar(url string) (*iCalCalendar, error) {
 }
 
 func (cal *iCalCalendar) events() (calendarEvents, error) {
-	// TODO: user agent
-	resp, err := http.Get(cal.url)
-	defer resp.Body.Close()
+	client := &http.Client{}
+
+	req, err := http.NewRequest("GET", cal.url, nil)
 	if err != nil {
 		return nil, err
 	}
+
+	req.Header.Set("User-Agent", "Matrix-Calendar-Bot")
+
+	resp, err := client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
 
 	c := gocal.NewParser(resp.Body)
 	c.Parse()

@@ -78,6 +78,7 @@ func (t *reminderTimer) createReminders() ([]reminder, error) {
 }
 
 func reminderLoop(reminders []reminder, stop <-chan struct{}, send func(*calendarEvent)) {
+OuterLoop:
 	for {
 		if len(reminders) == 0 {
 			break
@@ -90,17 +91,17 @@ func reminderLoop(reminders []reminder, stop <-chan struct{}, send func(*calenda
 		select {
 		case <-stop:
 			fmt.Println("Reminderloop stopped")
-			break
+			break OuterLoop
 		case <-time.After(time.Until(next.when)):
 			send(next.event)
-			fmt.Println("Reminder for:", next.event.text, next.event.from.Sub(time.Now()))
+			fmt.Println("Reminder for:", next.event.text, time.Until(next.event.from))
 
 			reminders = append([]reminder{}, reminders[1:]...)
 		}
 	}
 }
 
-func (t reminderTimer) highestReminderTime() time.Duration {
+func (t *reminderTimer) highestReminderTime() time.Duration {
 	highest := 0 * time.Second
 	for _, remT := range t.reminderTimes {
 		if remT > highest {

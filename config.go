@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"io"
-	"io/ioutil"
 	"os"
 )
 
@@ -42,7 +41,6 @@ var defaultConfig = config{
 // defaultConfig as JSON. isNew is then set to true.
 func loadConfig(filename string) (cfg config, isNew bool, err error) {
 	f, err := os.Open(filename)
-	defer f.Close()
 	if err != nil {
 		if !os.IsNotExist(err) {
 			return config{}, false, loadConfigError{false, err}
@@ -57,6 +55,7 @@ func loadConfig(filename string) (cfg config, isNew bool, err error) {
 
 		return defaultConfig, true, nil
 	}
+	defer f.Close()
 
 	dec := json.NewDecoder(f)
 	err = dec.Decode(&cfg)
@@ -73,7 +72,7 @@ func createConfig(filename string, cfg config) (err error) {
 		return err
 	}
 
-	err = ioutil.WriteFile(filename, data, 0600)
+	err = os.WriteFile(filename, data, 0600)
 	if err != nil {
 		return err
 	}
